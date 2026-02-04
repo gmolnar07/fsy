@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Botão Fujão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animação suave para quando o botão se move */
+        #btn-sim {
+            transition: all 0.2s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow: hidden; /* Impede barras de rolagem quando o botão vai para as bordas */
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center font-sans select-none">
+
+    <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full mx-4 relative z-10">
+        <div class="mb-8">
+            <span class="text-6xl">💸</span>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">
+            Jovem, Você ainda quer ir pro FSY?
+        </h1>
+        
+        <p class="text-gray-600 mb-8">
+            Essa é uma decisão muito importante. Escolha com sabedoria.
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4 items-center h-20 relative">
+            
+            <!-- Botão NÃO (Fixo e seguro) -->
+            <button 
+                id="btn-nao" 
+                class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none z-20">
+                Não
+            </button>
+
+            <!-- Botão SIM (O Fujão) -->
+            <!-- Começa estático (relative), mas vira absoluto via JS para fugir -->
+            <button 
+                id="btn-sim" 
+                class="px-8 py-3 bg-red-500 text-white font-bold rounded-full shadow-lg cursor-pointer focus:outline-none z-30">
+                Sim
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Modal de Resposta -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm mx-4 transform scale-100 transition-transform">
+            <div class="text-5xl mb-4">😅</div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Ufa! Ainda bem.</h2>
+            <p class="text-gray-600">Fico Feliz.</p>
+            <button onclick="fecharModal()" class="mt-6 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                Tentar de novo
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const btnSim = document.getElementById('btn-sim');
+        const btnNao = document.getElementById('btn-nao');
+        const modal = document.getElementById('modal');
+
+        // Função para mover o botão para uma posição aleatória
+        function fugir() {
+            // Define o botão como 'fixed' para poder se mover livremente pela tela
+            btnSim.style.position = 'fixed';
+
+            // Tamanho da janela e do botão
+            const larguraJanela = window.innerWidth;
+            const alturaJanela = window.innerHeight;
+            const larguraBotao = btnSim.offsetWidth;
+            const alturaBotao = btnSim.offsetHeight;
+
+            // Calcula nova posição aleatória garantindo que fique dentro da tela
+            // Subtraímos o tamanho do botão e uma margem de segurança (20px)
+            const novoLeft = Math.random() * (larguraJanela - larguraBotao - 40) + 20;
+            const novoTop = Math.random() * (alturaJanela - alturaBotao - 40) + 20;
+
+            // Aplica as novas coordenadas
+            btnSim.style.left = `${novoLeft}px`;
+            btnSim.style.top = `${novoTop}px`;
+        }
+
+        // Eventos para Desktop (Mouse)
+        btnSim.addEventListener('mouseover', fugir);
+
+        // Eventos para Mobile (Toque)
+        // Usamos 'touchstart' para ele fugir assim que o dedo encostar
+        btnSim.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita o clique real
+            fugir();
+        });
+
+        // Caso o usuário seja um ninja e consiga clicar (muito difícil)
+        btnSim.addEventListener('click', (e) => {
+            e.preventDefault();
+            fugir();
+        });
+
+        // Lógica do botão Não
+        btnNao.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            // Reseta a posição do botão Sim para o centro original
+            btnSim.style.position = 'static';
+        });
+
+        function fecharModal() {
+            modal.classList.add('hidden');
+        }
+
+    </script>
+</body>
+</html>
