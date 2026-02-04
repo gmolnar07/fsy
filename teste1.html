@@ -3,622 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventPass - Check-in FSY</title>
-    
-    <!-- Tailwind CSS (Estilo) -->
+    <title>O Botão Fujão</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Ícones (Phosphor Icons) -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
     <style>
-        /* Animações */
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        /* Animação suave para quando o botão se move */
+        #btn-sim {
+            transition: all 0.2s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        .animate-slide-in { animation: slideIn 0.3s ease-out forwards; }
-        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-        .animate-shake { animation: shake 0.3s ease-in-out; }
         
-        /* Utils */
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow: hidden; /* Impede barras de rolagem quando o botão vai para as bordas */
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+<body class="h-screen flex items-center justify-center font-sans select-none">
 
-    <!-- TELA DE LOGIN (Visível inicialmente) -->
-    <div id="login-screen" class="fixed inset-0 bg-indigo-600 z-[100] flex flex-col items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 text-center animate-fade-in">
-            <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-                <i class="ph-bold ph-lock-key text-4xl"></i>
-            </div>
-            
-            <h2 class="text-2xl font-bold text-slate-800 mb-2">Acesso Restrito</h2>
-            <p class="text-slate-500 mb-8 text-sm">Digite sua senha para acessar.</p>
-            
-            <form id="login-form" class="space-y-4">
-                <div class="relative">
-                    <input type="password" id="login-password" 
-                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-center text-lg tracking-widest placeholder:tracking-normal placeholder:text-slate-400 transition-all" 
-                        placeholder="Senha" autofocus>
-                </div>
-                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transform active:scale-95">
-                    Entrar
-                </button>
-            </form>
-            
-            <p id="login-error" class="text-red-500 text-sm mt-4 hidden font-medium flex items-center justify-center gap-1">
-                <i class="ph-bold ph-warning-circle"></i> Senha incorreta
-            </p>
+    <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md w-full mx-4 relative z-10">
+        <div class="mb-8">
+            <span class="text-6xl">💸</span>
         </div>
-        <div class="mt-8 text-indigo-200 text-sm font-medium opacity-60">
-            FSY 2026 &bull; Controle de Acesso
-        </div>
-    </div>
-
-    <!-- CONTEÚDO DO APP (Oculto inicialmente) -->
-    <div id="app-content" class="hidden pb-24 md:pb-8">
         
-        <!-- Navbar -->
-        <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-20">
-            <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <i class="ph-bold ph-tent text-2xl"></i>
-                    <h1 class="text-xl font-bold tracking-tight">Check-in FSY</h1>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div id="admin-badge" class="hidden bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
-                        Admin
-                    </div>
-                    <div class="text-sm font-medium bg-indigo-700/50 px-3 py-1 rounded-full border border-indigo-500/30">
-                        <span id="header-count">0 / 0</span> Presentes
-                    </div>
-                    <button onclick="logout()" class="text-white/70 hover:text-white p-1" title="Sair / Bloquear">
-                        <i class="ph-bold ph-lock-key-open"></i>
-                    </button>
-                </div>
-            </div>
-        </header>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">
+            Jovem, Você ainda quer ir pro FSY?
+        </h1>
+        
+        <p class="text-gray-600 mb-8">
+            Essa é uma decisão muito importante. Escolha com sabedoria. pfvr
+        </p>
 
-        <main class="max-w-4xl mx-auto p-4 space-y-6">
+        <div class="flex flex-col sm:flex-row justify-center gap-4 items-center h-20 relative">
             
-            <!-- Cards de Estatísticas -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center md:items-start">
-                    <div class="hidden md:block mb-1 opacity-80"><i class="ph-bold ph-users text-indigo-600 text-xl"></i></div>
-                    <span id="stat-total" class="text-2xl font-bold text-slate-800">0</span>
-                    <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Total</span>
-                </div>
-                <div class="bg-green-50 p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center md:items-start">
-                    <div class="hidden md:block mb-1 opacity-80"><i class="ph-bold ph-check-circle text-green-600 text-xl"></i></div>
-                    <span id="stat-checked" class="text-2xl font-bold text-slate-800">0</span>
-                    <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Confirmados</span>
-                </div>
-                <div class="bg-amber-50 p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center md:items-start">
-                    <div class="hidden md:block mb-1 opacity-80"><i class="ph-bold ph-x-circle text-amber-600 text-xl"></i></div>
-                    <span id="stat-pending" class="text-2xl font-bold text-slate-800">0</span>
-                    <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Pendentes</span>
-                </div>
-                <div class="bg-blue-50 p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center md:items-start">
-                    <div class="hidden md:block mb-1 opacity-80"><i class="ph-bold ph-chart-pie-slice text-blue-600 text-xl"></i></div>
-                    <span id="stat-percent" class="text-2xl font-bold text-slate-800">0%</span>
-                    <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Ocupação</span>
-                </div>
-            </div>
+            <!-- Botão NÃO (Fixo e seguro) -->
+            <button 
+                id="btn-nao" 
+                class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none z-20">
+                Não
+            </button>
 
-            <!-- Barra de Busca e Filtros -->
-            <div class="flex flex-col md:flex-row gap-4 justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                <div class="relative flex-1">
-                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
-                    <input type="text" id="search-input" placeholder="Buscar por nome, quarto ou grupo..." 
-                        class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-400">
-                </div>
-                
-                <div class="flex gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-hide" id="filter-container">
-                    <button onclick="setFilter('all')" id="btn-filter-all" class="filter-btn active px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-slate-800 text-white shadow-md">Todos</button>
-                    <button onclick="setFilter('checked-in')" id="btn-filter-checked" class="filter-btn px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white text-slate-600 hover:bg-slate-50 border border-slate-200">Presentes</button>
-                    <button onclick="setFilter('pending')" id="btn-filter-pending" class="filter-btn px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white text-slate-600 hover:bg-slate-50 border border-slate-200">Pendentes</button>
-                </div>
-            </div>
+            <!-- Botão SIM (O Fujão) -->
+            <!-- Começa estático (relative), mas vira absoluto via JS para fugir -->
+            <button 
+                id="btn-sim" 
+                class="px-8 py-3 bg-red-500 text-white font-bold rounded-full shadow-lg cursor-pointer focus:outline-none z-30">
+                Sim
+            </button>
 
-            <!-- Lista de Participantes -->
-            <div id="attendees-list" class="space-y-3">
-                <!-- Gerado via JS -->
-            </div>
-
-        </main>
-
-        <!-- Botão Flutuante (Add) - Apenas Admin -->
-        <button id="btn-add-attendee" onclick="openModal()" class="hidden fixed right-6 bottom-6 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all transform hover:scale-110 active:scale-95 z-30">
-            <i class="ph-bold ph-user-plus text-2xl"></i>
-        </button>
-
-        <!-- Botão Reset (Esquerdo) - Apenas Admin -->
-        <button id="btn-reset-data" onclick="resetData()" title="Resetar Dados" class="hidden fixed left-6 bottom-6 w-10 h-10 bg-white border border-slate-200 text-slate-400 hover:text-red-600 hover:border-red-200 rounded-full shadow-md flex items-center justify-center transition-colors hover:rotate-90 duration-300 z-30">
-            <i class="ph-bold ph-arrow-counter-clockwise text-lg"></i>
-        </button>
-    </div>
-
-    <!-- Modal Adicionar/Editar -->
-    <div id="modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-y-auto max-h-[90vh] animate-fade-in">
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 sticky top-0">
-                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="ph-bold ph-user-circle text-indigo-600"></i> <span id="modal-title">Novo Participante</span>
-                </h2>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1 rounded-full transition-colors">
-                    <i class="ph-bold ph-x text-xl"></i>
-                </button>
-            </div>
-            
-            <form id="add-form" class="p-6 space-y-4">
-                <input type="hidden" id="input-id">
-                
-                <!-- Nome -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nome Completo</label>
-                    <input type="text" id="input-name" required class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Ex: João da Silva">
-                </div>
-
-                <!-- Info Principal (Visualizada no Card) -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Quarto</label>
-                        <input type="text" id="input-room" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Ex: 104">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Grupo</label>
-                        <input type="text" id="input-group" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Ex: 1A">
-                    </div>
-                </div>
-
-                <!-- Info Secundária (Guardada internamente) -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Documento (CPF/RG)</label>
-                    <input type="text" id="input-document" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="000.000.000-00">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Ônibus / Estaca</label>
-                    <input type="text" id="input-bus" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Ex: Rio Norte - Ônibus 1">
-                </div>
-
-                <!-- Saúde -->
-                <div class="pt-2 border-t border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3 flex items-center gap-1"><i class="ph-bold ph-heartbeat"></i> Saúde & Segurança</h3>
-                    
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Remédios Controlados?</label>
-                            <input type="text" id="input-medicine" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Liste se houver, ou deixe vazio">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Alergias?</label>
-                            <input type="text" id="input-allergy" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Liste se houver, ou deixe vazio">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pt-4 flex gap-3">
-                    <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2.5 text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg font-medium">Cancelar</button>
-                    <button type="submit" class="flex-1 px-4 py-2.5 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium shadow-sm flex items-center justify-center gap-2">
-                        <i class="ph-bold ph-check"></i> Salvar
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-4 left-0 right-0 md:left-auto md:right-4 md:top-20 z-[60] flex flex-col items-center md:items-end gap-2 px-4 pointer-events-none"></div>
+    <!-- Modal de Resposta -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm mx-4 transform scale-100 transition-transform">
+            <div class="text-5xl mb-4">😅</div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Ufa! Ainda bem.</h2>
+            <p class="text-gray-600">Fico Feliz.</p>
+            <button onclick="fecharModal()" class="mt-6 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                Tentar de novo
+            </button>
+        </div>
+    </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- CONFIGURAÇÃO DE SEGURANÇA ---
-        const PASS_TEAM = "fsy2026";   // SENHA DA EQUIPE (Apenas Check-in)
-        const PASS_ADMIN = "admin2026"; // SENHA DO ADMINISTRADOR (Total)
-        
-        // Estado de Permissão
-        let currentUserRole = 'none'; // 'admin' ou 'team'
+        const btnSim = document.getElementById('btn-sim');
+        const btnNao = document.getElementById('btn-nao');
+        const modal = document.getElementById('modal');
 
-        // --- Lista de Nomes (Base) ---
-        const NAMES_DB = [
-            "AAA", "André Muniz", "Kevelen Muniz", "Leonardo Silva", "Soraia Silva", "Luiza da Hora", "Henrique Lopes", 
-            "Joanna Lopes", "Vitor Santos", "Caroline Santos", "Breno Duarte", "Israel Maciel", "Irene Maciel", 
-            "Adria Cunha", "Agatha Araújo", "Aimée Braga", "Alex Oliveira", "Ana Clara Aranha", "Diego Garcia", 
-            "Anna Farias", "Beatriz Lima", "Beatriz Sousa", "Bianca Augusto", "Camilly Viana", "Catarina Develis", 
-            "Eduardo Novais", "Emilly Cruz", "Esther Lopes", "Eziele Freitas", "Gabriel Costa", "Giuliana Bastos", 
-            "Guilherme Molnar", "Henrique Mendes", "Isabelle Nunes", "Jhones Gabriel", "João Ferreira", "João Ramos", 
-            "João Victor Lopes", "Kauã Silva", "Larissa Silva", "Laura Alvarenga", "Laura Babisk", "Luan Silva", 
-            "Lucas Lardy", "Luccas Reis", "Marco Garcia", "Matheus Franco", "Melissa Alteirado", "Natalia Cassiano", 
-            "Natalia Rodrigues", "Patherson Garcez", "Rebecca Campanella", "Sara Galvão", "Tom Alves", "Vinicius Santos", 
-            "Willian Santana", "Alex Silva", "Alice Almeida", "Alice Branco", "Alice Freitas", "Alicya Oliveira", 
-            "Allan Rodrigues", "Alma Barreiros", "Alondra Yudiht Suarez", "Amanda Felix", "Ana Beatriz Silva", 
-            "Ana Clara Loureiro", "Ana Clara Lyrio", "Ana Julia", "Ana Luiza Ferreira", "Ana Luiza Souza", "Ana Menezes", 
-            "Ana Paula Rodrigues", "Ana Sophia", "Anna Julia", "Antônia Rocha", "Antônio Afonso", "Antônio Gonçalves", 
-            "Antonio Lizardo", "Antônio Venâncio", "Ariel Moraes", "Arthur Araujo", "Arthur Brandalize", "Arthur Kanashiro", 
-            "Arthur Leite", "Arthur Maciel", "Arthur Marinho", "Arthur Silva", "Arthur Souza", "Atanael Chacon", 
-            "Athila de Souza", "Athos Fonseca", "Beatriz Silva", "Benjamim Rodrigues", "Benjamim Silva", "Bernardo Caleb", 
-            "Bernardo Reis", "Breenda Xavier", "Breno Matos", "Bruno Kuster", "Bryan Yoshida", "Caio Simões", "Caíque Nunes", 
-            "Carlos Braga", "Carlos Monteiro", "Carlos Santos", "Carlos Sotero", "Cauã Barbosa", "Cauã Costa", "Christian", 
-            "Cindy Martins", "Claudianne Santos", "Dafny Monteiro", "Dandara Oliveira", "Daniel Barreto", "Daniel Cruz", 
-            "Daniel Melo", "Daniel Pereira", "Darius Ramirez", "Davi", "Davi Kuster", "Gabrielli", "Guilherme Gemieski", 
-            "Helamã Anderson Moura Lopes", "Iago Tavares E Silva", "Isabelle Ferreira Santos", "João", "Juan", 
-            "Julia Lopes Dos Reis", "Kevin Sarkis", "Larissa Inagaki Wolino", "Laura", "Luana", "Luiz Gabriel", 
-            "Maria Madureira", "Marllon Ferro", "Maruan Quadros", "Miguel", "Miguel Andrade", "Miguel Neri", "Moara Quadros", 
-            "Nayara de Mattos", "Néfi de Jesus", "Nicholas Silva", "Nicholas Souza", "Nicolas Branco", "Nicole Almeida", 
-            "Nicole Severo", "Paloma Apolinario", "Paulo", "Paulo Galvão", "Pedro Henrique da Silva", "Pedro da Silva", 
-            "Pedro Silva", "Pierre Santiago", "Pilar Almeida", "Rafael Yoshida", "Rafaela", "Rafaela Rocha", 
-            "Rafaela Rodrigues", "Rafaella do Prado", "Rafaely Amancio", "Raiany Bonadiman", "Raphaell da Silva", 
-            "Raquel Dos Santos", "Raquel Ferreira", "Raviny da Silva", "Rebeca de Jesus", "Rebeca Mendes", "Ricardo Pereira", 
-            "Riquelme Silva", "Robson dos Anjos", "Rodrigo Filho", "Rodrigo García", "Ronald Lima", "Ronaldo Almeida", 
-            "Ruan Gomes", "Ryan Sales", "Sabrina Silva", "Samuel", "Samuel Barbosa", "Samuel Bastos", "Samuel Menezes", 
-            "Samuel Otondo", "Samuelzinho", "Saori Yonemura", "Sara", "Sara Ribeiro", "Sara Silva", "Sarah Eufrausino", 
-            "Sarah Gualberto", "Sofia", "Sofia Dos Santos", "Sofia Gomes", "Sofia Nascimento", "Sofia Nunes", "Sofia Santiago", 
-            "Sonia Lyra", "Sophia Campanella", "Sophia de Oliveira", "Sophia de Souza", "Sophia Gualberto", "Sophia Sobral", 
-            "Stephany Conceição", "Sthefany Gonçalves", "Tatá Ferreira", "Tayla Gomes", "Tayma Souza", "Thomas Cavalcanti", 
-            "Tiana Fernandes", "Uedio Junior", "Valentina de Sousa", "Valentina Nunes", "Veronika Rodriguez", "Victhor Silva", 
-            "Vitor Ferreira", "Vitoria Paiva", "Vitória Palmieri", "Wemerson Nascimento", "Wenderson Nascimento", "Wendy Gripp", 
-            "Yago da Conceição", "Yan Andrade", "Yasmim Xavier", "Yasmin de Oliveira", "Yasmin Rosa", "Yasmin Santos"
-        ];
+        // Função para mover o botão para uma posição aleatória
+        function fugir() {
+            // Define o botão como 'fixed' para poder se mover livremente pela tela
+            btnSim.style.position = 'fixed';
 
-        // Função para gerar dados iniciais com placeholders
-        function generateInitialData() {
-            return NAMES_DB.map((name, index) => ({
-                id: index + 1,
-                name: name,
-                room: "", 
-                group: "", 
-                document: "",
-                bus: "Rio Norte",
-                medicine: "",
-                allergy: "",
-                checkedIn: false,
-                checkInTime: null
-            }));
+            // Tamanho da janela e do botão
+            const larguraJanela = window.innerWidth;
+            const alturaJanela = window.innerHeight;
+            const larguraBotao = btnSim.offsetWidth;
+            const alturaBotao = btnSim.offsetHeight;
+
+            // Calcula nova posição aleatória garantindo que fique dentro da tela
+            // Subtraímos o tamanho do botão e uma margem de segurança (20px)
+            const novoLeft = Math.random() * (larguraJanela - larguraBotao - 40) + 20;
+            const novoTop = Math.random() * (alturaJanela - alturaBotao - 40) + 20;
+
+            // Aplica as novas coordenadas
+            btnSim.style.left = `${novoLeft}px`;
+            btnSim.style.top = `${novoTop}px`;
         }
 
-        // --- Estado Global ---
-        let attendees = [];
-        let currentFilter = 'all';
-        let searchTerm = '';
+        // Eventos para Desktop (Mouse)
+        btnSim.addEventListener('mouseover', fugir);
 
-        // --- Inicialização ---
-        function init() {
-            // Verifica se já está logado na sessão (recarregamento de página)
-            const storedRole = sessionStorage.getItem('fsy_user_role');
-            if (storedRole) {
-                currentUserRole = storedRole;
-                showApp();
-            }
-            
-            // Listeners
-            document.getElementById('login-form').addEventListener('submit', handleLogin);
-            
-            document.getElementById('search-input').addEventListener('input', (e) => {
-                searchTerm = e.target.value.toLowerCase();
-                renderList();
-            });
-            document.getElementById('add-form').addEventListener('submit', handleSaveAttendee);
-        }
+        // Eventos para Mobile (Toque)
+        // Usamos 'touchstart' para ele fugir assim que o dedo encostar
+        btnSim.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita o clique real
+            fugir();
+        });
 
-        // --- Sistema de Login ---
-        function handleLogin(e) {
+        // Caso o usuário seja um ninja e consiga clicar (muito difícil)
+        btnSim.addEventListener('click', (e) => {
             e.preventDefault();
-            const passwordInput = document.getElementById('login-password');
-            const errorMsg = document.getElementById('login-error');
-            const pass = passwordInput.value;
-            
-            if (pass === PASS_ADMIN) {
-                currentUserRole = 'admin';
-                sessionStorage.setItem('fsy_user_role', 'admin');
-                showApp();
-            } else if (pass === PASS_TEAM) {
-                currentUserRole = 'team';
-                sessionStorage.setItem('fsy_user_role', 'team');
-                showApp();
-            } else {
-                // Erro
-                errorMsg.classList.remove('hidden');
-                errorMsg.classList.add('animate-shake'); 
-                passwordInput.value = '';
-                passwordInput.focus();
-                setTimeout(() => errorMsg.classList.remove('animate-shake'), 500);
-            }
+            fugir();
+        });
+
+        // Lógica do botão Não
+        btnNao.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            // Reseta a posição do botão Sim para o centro original
+            btnSim.style.position = 'static';
+        });
+
+        function fecharModal() {
+            modal.classList.add('hidden');
         }
 
-        function showApp() {
-            // Configurar UI baseado no cargo
-            const isAdmin = currentUserRole === 'admin';
-            
-            if (isAdmin) {
-                document.getElementById('btn-add-attendee').classList.remove('hidden');
-                document.getElementById('btn-reset-data').classList.remove('hidden');
-                document.getElementById('admin-badge').classList.remove('hidden');
-            } else {
-                document.getElementById('btn-add-attendee').classList.add('hidden');
-                document.getElementById('btn-reset-data').classList.add('hidden');
-                document.getElementById('admin-badge').classList.add('hidden');
-            }
-
-            // Carrega dados
-            loadData();
-            renderApp();
-
-            // Transição
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('hidden');
-            document.getElementById('app-content').classList.add('animate-fade-in');
-        }
-
-        function logout() {
-            sessionStorage.removeItem('fsy_user_role');
-            location.reload(); 
-        }
-
-        // --- Gerenciamento de Dados ---
-        function loadData() {
-            try {
-                const saved = localStorage.getItem('event_attendees_v2');
-                if (saved) {
-                    attendees = JSON.parse(saved);
-                } else {
-                    attendees = generateInitialData();
-                }
-            } catch (e) {
-                attendees = generateInitialData();
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem('event_attendees_v2', JSON.stringify(attendees));
-            renderStats();
-        }
-
-        function resetData() {
-            if(confirm("ATENÇÃO ADMIN: Isso apagará todos os dados! Deseja continuar?")) {
-                localStorage.removeItem('event_attendees_v2');
-                attendees = generateInitialData();
-                saveData();
-                renderList();
-                showToast('Sistema resetado!', 'info');
-            }
-        }
-
-        // --- Renderização ---
-        function renderApp() {
-            renderStats();
-            renderList();
-        }
-
-        function renderStats() {
-            const total = attendees.length;
-            const checkedIn = attendees.filter(a => a.checkedIn).length;
-            const pending = total - checkedIn;
-            const percent = total === 0 ? 0 : Math.round((checkedIn / total) * 100);
-
-            document.getElementById('header-count').innerText = `${checkedIn} / ${total}`;
-            document.getElementById('stat-total').innerText = total;
-            document.getElementById('stat-checked').innerText = checkedIn;
-            document.getElementById('stat-pending').innerText = pending;
-            document.getElementById('stat-percent').innerText = `${percent}%`;
-        }
-
-        function renderList() {
-            const listContainer = document.getElementById('attendees-list');
-            listContainer.innerHTML = '';
-            const isAdmin = currentUserRole === 'admin';
-
-            // Filtragem
-            const filtered = attendees.filter(a => {
-                const searchStr = `${a.name} ${a.room} ${a.group}`.toLowerCase();
-                const matchesSearch = searchStr.includes(searchTerm);
-                const matchesFilter = currentFilter === 'all' ? true : 
-                                      currentFilter === 'checked-in' ? a.checkedIn : !a.checkedIn;
-                return matchesSearch && matchesFilter;
-            }).sort((a, b) => a.name.localeCompare(b.name));
-
-            // Empty State
-            if (filtered.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="text-center py-16 text-slate-400 bg-white rounded-xl border border-slate-200 border-dashed flex flex-col items-center">
-                        <i class="ph ph-magnifying-glass text-5xl mb-3 opacity-20"></i>
-                        <p class="font-medium">Nenhum resultado encontrado.</p>
-                    </div>`;
-                return;
-            }
-
-            // Gerar HTML
-            filtered.forEach(a => {
-                const initial = a.name.charAt(0).toUpperCase();
-                const hasMedicalInfo = (a.medicine && a.medicine.trim() !== "") || (a.allergy && a.allergy.trim() !== "");
-                
-                // Cursor pointer apenas se for admin para editar
-                const cursorClass = isAdmin ? "cursor-pointer hover:bg-slate-50" : "cursor-default";
-                const editAction = isAdmin ? `onclick="editAttendee(${a.id})"` : "";
-                
-                const itemHTML = `
-                <div class="group flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-xl border transition-all duration-200 hover:shadow-md gap-4 sm:gap-0 ${a.checkedIn ? 'border-green-200 bg-green-50/30' : 'border-slate-200'}">
-                    
-                    <!-- Info Principal -->
-                    <div class="flex items-center gap-4 flex-1 min-w-0 ${cursorClass} rounded-lg p-1 -ml-1 transition-colors" ${editAction} title="${isAdmin ? 'Clique para editar' : ''}">
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold shrink-0 shadow-sm ${a.checkedIn ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}">
-                            ${initial}
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="flex items-center gap-2">
-                                <h3 class="font-bold text-slate-800 truncate text-lg">${a.name}</h3>
-                                ${hasMedicalInfo ? '<i class="ph-fill ph-first-aid text-red-500" title="Informação Médica"></i>' : ''}
-                            </div>
-                            
-                            <div class="flex items-center gap-3 text-sm mt-1">
-                                <span class="flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">
-                                    <i class="ph-bold ph-door text-indigo-500"></i> ${a.room ? 'Quarto ' + a.room : 'Sem quarto'}
-                                </span>
-                                <span class="flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium">
-                                    <i class="ph-bold ph-users-three text-orange-500"></i> ${a.group ? 'Grupo ' + a.group : 'Sem grupo'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Ações -->
-                    <div class="flex items-center justify-end gap-3 pl-2 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
-                        ${a.checkedIn ? `<span class="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded border border-green-200 shadow-sm flex items-center gap-1"><i class="ph-bold ph-clock"></i> ${a.checkInTime}</span>` : ''}
-                        
-                        <button onclick="toggleCheckIn(${a.id})" 
-                            class="w-12 h-12 rounded-full flex items-center justify-center transition-all focus:outline-none shadow-sm ${a.checkedIn ? 'bg-green-600 text-white hover:bg-green-700 scale-105' : 'bg-white text-slate-300 border-2 border-slate-200 hover:border-indigo-400 hover:text-indigo-600 hover:scale-105'}"
-                            title="${a.checkedIn ? 'Cancelar Check-in' : 'Realizar Check-in'}">
-                            <i class="ph-bold ph-check text-2xl"></i>
-                        </button>
-                    </div>
-                </div>`;
-                listContainer.innerHTML += itemHTML;
-            });
-        }
-
-        // --- Ações ---
-        function toggleCheckIn(id) {
-            const index = attendees.findIndex(a => a.id === id);
-            if (index !== -1) {
-                const attendee = attendees[index];
-                attendee.checkedIn = !attendee.checkedIn;
-                
-                if (attendee.checkedIn) {
-                    attendee.checkInTime = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                    showToast(`Bem-vindo(a), ${attendee.name.split(' ')[0]}!`, 'success');
-                } else {
-                    attendee.checkInTime = null;
-                    showToast(`Check-in cancelado.`, 'info');
-                }
-                
-                saveData();
-                renderList();
-            }
-        }
-
-        // Modal Logic
-        function openModal() {
-            if (currentUserRole !== 'admin') return;
-            document.getElementById('modal-title').innerText = "Novo Participante";
-            document.getElementById('input-id').value = ""; // Vazio = Novo
-            document.getElementById('add-form').reset();
-            document.getElementById('modal-overlay').classList.remove('hidden');
-            document.getElementById('input-name').focus();
-        }
-
-        function editAttendee(id) {
-            // BLOQUEIO DE SEGURANÇA: Se não for admin, não faz nada
-            if (currentUserRole !== 'admin') {
-                showToast('Apenas administradores podem editar dados.', 'info');
-                return;
-            }
-
-            const attendee = attendees.find(a => a.id === id);
-            if(attendee) {
-                document.getElementById('modal-title').innerText = "Editar Dados";
-                document.getElementById('input-id').value = attendee.id;
-                
-                document.getElementById('input-name').value = attendee.name || "";
-                document.getElementById('input-room').value = attendee.room || "";
-                document.getElementById('input-group').value = attendee.group || "";
-                document.getElementById('input-document').value = attendee.document || "";
-                document.getElementById('input-bus').value = attendee.bus || "";
-                document.getElementById('input-medicine').value = attendee.medicine || "";
-                document.getElementById('input-allergy').value = attendee.allergy || "";
-
-                document.getElementById('modal-overlay').classList.remove('hidden');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.add('hidden');
-        }
-
-        function handleSaveAttendee(e) {
-            e.preventDefault();
-            if (currentUserRole !== 'admin') return;
-
-            const idInput = document.getElementById('input-id').value;
-            
-            // Coletar dados do form
-            const formData = {
-                name: document.getElementById('input-name').value,
-                room: document.getElementById('input-room').value,
-                group: document.getElementById('input-group').value,
-                document: document.getElementById('input-document').value,
-                bus: document.getElementById('input-bus').value,
-                medicine: document.getElementById('input-medicine').value,
-                allergy: document.getElementById('input-allergy').value
-            };
-
-            if (formData.name) {
-                if (idInput) {
-                    // EDITAR EXISTENTE
-                    const index = attendees.findIndex(a => a.id == idInput);
-                    if(index !== -1) {
-                        attendees[index] = { ...attendees[index], ...formData };
-                        showToast('Dados atualizados!', 'success');
-                    }
-                } else {
-                    // CRIAR NOVO
-                    const newId = attendees.length > 0 ? Math.max(...attendees.map(a => a.id)) + 1 : 1;
-                    attendees.push({
-                        id: newId,
-                        ...formData,
-                        checkedIn: false,
-                        checkInTime: null
-                    });
-                    showToast('Participante adicionado!', 'success');
-                }
-                
-                saveData();
-                renderList();
-                closeModal();
-            }
-        }
-
-        // --- UI Utils ---
-        function setFilter(filterType) {
-            currentFilter = filterType;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-white text-slate-600 hover:bg-slate-50 border border-slate-200";
-            });
-            const activeBtn = document.getElementById(`btn-filter-${filterType === 'all' ? 'all' : filterType === 'checked-in' ? 'checked' : 'pending'}`);
-            activeBtn.className = "filter-btn active px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 bg-slate-800 text-white shadow-md transform scale-105";
-            renderList();
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const colors = { 'success': 'bg-green-600', 'info': 'bg-slate-800' };
-            const icons = { 'success': 'ph-check-circle', 'info': 'ph-info' };
-
-            const toast = document.createElement('div');
-            toast.className = `${colors[type]} text-white px-6 py-3 rounded-full md:rounded-lg shadow-xl text-sm font-bold animate-slide-in flex items-center gap-2 min-w-[200px] justify-center md:justify-start pointer-events-auto`;
-            toast.innerHTML = `<i class="ph-bold ${icons[type]} text-lg"></i> ${message}`;
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-10px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Iniciar
-        init();
     </script>
 </body>
 </html>
